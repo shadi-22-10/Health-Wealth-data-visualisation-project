@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualising Global Well-Being</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- D3.js v7 (local) -->
+    <script src="libs/d3/d3.v7.min.js"></script>
+    <!-- TopoJSON for choropleth (local) -->
+    <script src="libs/topojson/topojson-client.min.js"></script>
+</head>
+<body>
+
+    <!-- ===== NAVIGATION ===== -->
+    <nav id="story-nav">
+        <div class="nav-brand">Global Well-Being Explorer</div>
+        <ul class="nav-links">
+            <li><a href="#hero" class="nav-link active" data-section="hero">Home</a></li>
+            <li><a href="#scatter" class="nav-link" data-section="scatter">Wealth & Happiness</a></li>
+            <li><a href="#map" class="nav-link" data-section="map">World Map</a></li>
+            <li><a href="#bar" class="nav-link" data-section="bar">Regional View</a></li>
+            <li><a href="#trends" class="nav-link" data-section="trends">Trends</a></li>
+            <li><a href="#radar" class="nav-link" data-section="radar">Country Profile</a></li>
+            <li><a href="#conclusion" class="nav-link" data-section="conclusion">Insights</a></li>
+        </ul>
+        <!-- Year slider (global filter) -->
+        <div class="year-control">
+            <label for="year-slider">Year:</label>
+            <input type="range" id="year-slider" min="2015" max="2019" value="2015" step="1">
+            <span id="year-display">2015</span>
+        </div>
+    </nav>
+
+    <!-- ===== HERO / INTRO ===== -->
+    <section id="hero" class="story-section">
+        <div class="hero-content">
+            <h1>Does Money Buy Happiness?</h1>
+            <p class="subtitle">Exploring the links between economic capacity, health outcomes, and happiness across 157 countries</p>
+            <p class="description">
+                Nations invest trillions in economic growth, yet GDP alone cannot explain why some
+                countries thrive while others struggle. This interactive story explores how wealth,
+                health, and social factors shape the well-being of populations around the world.
+            </p>
+            <a href="#scatter" class="cta-button">Begin Exploring &darr;</a>
+        </div>
+    </section>
+
+    <!-- ===== SECTION 1: SCATTER ===== -->
+    <section id="scatter" class="story-section">
+        <div class="section-header">
+            <h2>Wealth vs Happiness</h2>
+            <p>GDP per capita shows a strong logarithmic relationship with happiness (r&nbsp;=&nbsp;0.79),
+               but the curve flattens above ~$30,000 — suggesting diminishing returns of wealth on well-being.</p>
+        </div>
+        <div class="chart-container">
+            <div id="scatter-chart" class="chart"></div>
+            <div id="scatter-tooltip" class="tooltip"></div>
+        </div>
+        <div class="chart-legend" id="scatter-legend"></div>
+    </section>
+
+    <!-- ===== SECTION 2: CHOROPLETH MAP ===== -->
+    <section id="map" class="story-section">
+        <div class="section-header">
+            <h2>A Global Picture</h2>
+            <p>Geography matters. Northern Europe and the Americas consistently rank highest, while
+               Sub-Saharan Africa faces the greatest challenges across multiple well-being indicators.</p>
+        </div>
+        <div class="map-controls">
+            <label for="map-metric">Colour by:</label>
+            <select id="map-metric">
+                <option value="happiness">Happiness Score</option>
+                <option value="gdp_per_capita">GDP per Capita</option>
+                <option value="life_expectancy">Life Expectancy</option>
+                <option value="internet_users">Internet Access %</option>
+            </select>
+        </div>
+        <div class="chart-container">
+            <div id="map-chart" class="chart chart-wide"></div>
+            <div id="map-tooltip" class="tooltip"></div>
+        </div>
+        <div id="map-legend-bar" class="color-legend"></div>
+    </section>
+
+    <!-- ===== SECTION 3: BAR CHART ===== -->
+    <section id="bar" class="story-section">
+        <div class="section-header">
+            <h2>Regional Comparison</h2>
+            <p>Happiness varies dramatically between regions. Western Europe and North America lead,
+               while Sub-Saharan Africa and Southern Asia lag behind — but there are outliers in every group.</p>
+        </div>
+        <div class="chart-container">
+            <div id="bar-chart" class="chart"></div>
+            <div id="bar-tooltip" class="tooltip"></div>
+        </div>
+    </section>
+
+    <!-- ===== SECTION 4: LINE CHART ===== -->
+    <section id="trends" class="story-section">
+        <div class="section-header">
+            <h2>How Has the World Changed?</h2>
+            <p>Over three decades, global GDP has risen steadily, life expectancy has improved,
+               and internet access has exploded — but not all countries have shared equally in this progress.</p>
+        </div>
+        <div class="trends-controls">
+            <label for="trends-metric">Metric:</label>
+            <select id="trends-metric">
+                <option value="GDP_current_US">GDP (current US$)</option>
+                <option value="life_expectancy">Life Expectancy</option>
+                <option value="population">Population</option>
+                <option value="CO2_emissions">CO₂ Emissions</option>
+            </select>
+            <div id="trends-country-chips" class="chip-container"></div>
+        </div>
+        <div class="chart-container">
+            <div id="line-chart" class="chart chart-wide"></div>
+            <div id="line-tooltip" class="tooltip"></div>
+        </div>
+    </section>
+
+    <!-- ===== SECTION 5: RADAR CHART ===== -->
+    <section id="radar" class="story-section">
+        <div class="section-header">
+            <h2>Country Well-Being Profile</h2>
+            <p>Each nation has a unique combination of strengths and weaknesses.
+               Compare up to three countries across six dimensions of well-being.</p>
+        </div>
+        <div class="radar-controls">
+            <select id="radar-country-1" class="country-select"></select>
+            <select id="radar-country-2" class="country-select"></select>
+            <select id="radar-country-3" class="country-select"></select>
+        </div>
+        <div class="chart-container">
+            <div id="radar-chart" class="chart"></div>
+        </div>
+        <div id="radar-legend" class="chart-legend"></div>
+    </section>
+
+    <!-- ===== SECTION 5: SECOND SCATTER CHART ===== -->
+    <section id="scatter2" class="story-section">
+    <div class="section-header">
+        <h2>Life Expectancy vs Happiness</h2>
+        <p>
+            This scatter plot shows the relationship between life expectancy and happiness across countries.
+            Although the trend line slopes upward, the relationship is weak. The correlation coefficient
+            (r = 0.16) indicates a very weak positive relationship, while R² = 0.03 shows that life expectancy
+            explains only 3% of the variation in happiness. We can therefore conclude that life expectancy in 
+            isolation is not a strong predictor of happiness. In contrast, the first scatter chart of 
+            GDP per capita vs happiness shows a strong non linear relationship between gdp and happiness
+            which indicates diminishing returns at higher income levels. This shows that GDP is a much stronger
+            predictor of happiness than life expectancy. 
+        </p>
+    </div>
+    <div class="chart-container">
+        <div id="scatter2-chart" class="chart"></div>
+        <div id="scatter2-tooltip" class="tooltip"></div>
+    </div>
+    <div id="scatter2-stats" class="scatter-stats"></div>
+</section>
+
+    <!-- ===== CONCLUSION ===== -->
+    <section id="conclusion" class="story-section">
+        <div class="conclusion-content">
+            <h2>Key Insights</h2>
+            <div class="insight-cards">
+                <div class="insight-card">
+                    <div class="insight-number">0.79</div>
+                    <div class="insight-label">GDP–Happiness correlation</div>
+                    <p>Wealth matters, but with diminishing returns above $30K per capita.</p>
+                </div>
+                <div class="insight-card">
+                    <div class="insight-number">30 yrs</div>
+                    <div class="insight-label">Life expectancy gap</div>
+                    <p>The gap between the healthiest and least healthy nations remains staggering.</p>
+                </div>
+                <div class="insight-card">
+                    <div class="insight-number">0.65</div>
+                    <div class="insight-label">Social support correlation</div>
+                    <p>Community and social networks are as important as economic factors.</p>
+                </div>
+                <div class="insight-card">
+                    <div class="insight-number">0.14</div>
+                    <div class="insight-label">Generosity correlation</div>
+                    <p>Charitable giving alone does not predict national happiness.</p>
+                </div>
+            </div>
+            <div class="conclusion-text">
+                <h3>What Should Policymakers Do?</h3>
+                <p>This data suggests that investment in healthcare, social safety nets, and civil liberties
+                   yields happiness returns that rival pure economic growth. Countries seeking to improve
+                   citizen well-being should pursue balanced development across all dimensions — not GDP alone.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer>
+        <p>F21DV Data Visualisation &amp; Analytics — Group 4, Dubai Campus — Heriot-Watt University 2026</p>
+        <p class="data-sources">Data: World Bank, WHO, World Happiness Report (Kaggle)</p>
+    </footer>
+
+    <!-- ===== APPLICATION SCRIPTS (ES6 modules) ===== -->
+    <script type="module" src="scripts/main.js"></script>
+</body>
+</html>
