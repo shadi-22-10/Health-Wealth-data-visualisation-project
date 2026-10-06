@@ -1,8 +1,5 @@
 # Global Well-Being Explorer
 
-> **F21DV Data Visualisation & Analytics — Group 4, Dubai Campus**  
-> Heriot-Watt University, 2026
-
 An interactive data story exploring the relationship between economic capacity, health outcomes, and happiness across 157 countries.
 
 ## Live Demo
@@ -72,23 +69,4 @@ data/
 - **Double-click scatter**: resets all filters
 - **Scroll-based nav**: IntersectionObserver highlights active section
 
-## Team
 
-Group 4 — Dubai Campus, Heriot-Watt University
-
-## Grading Criteria
-
-| Component | Weight |
-|-----------|--------|
-| Design presentation | 10% |
-| Data processing | 5% |
-| Visualisations (5 charts) | 10% |
-| Interactions (bidirectional) | 5% |
-| Design & storytelling | 5% |
-| Code quality | 5% |
-| Demo | 10% |
-| Individual report | 10% |
-
-## License
-
-Academic project — not for redistribution.
